@@ -1,9 +1,7 @@
 package com.sibasish.ecom.customerservice.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.sibasish.ecom.customerservice.entity.Role;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -11,11 +9,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class CustomerResponse {
 
     private UUID customerId;
     private String firstName;
     private String lastName;
     private String email;
-    private Integer mobile;
+    private String mobile;
 }

@@ -6,10 +6,7 @@ import com.sibasish.ecom.customerservice.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/customer")
@@ -24,11 +21,11 @@ public class CustomerController {
         return "Hi";
     }
 
-    /*
+    @PostMapping("/create")
     public ResponseEntity<CustomerResponse> createUser(@RequestBody CustomerRequest customerRequest) {
 
-        return new ResponseEntity<CustomerResponse>(HttpStatus.OK);
+        CustomerResponse customerResponse = customerService.createUser(customerRequest);
+        return new ResponseEntity<>(customerResponse, HttpStatus.OK);
     }
-     */
 
 }

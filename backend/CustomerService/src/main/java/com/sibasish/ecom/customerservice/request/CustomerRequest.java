@@ -14,6 +14,5 @@ public class CustomerRequest {
     private String lastName;
     private String email;
     private String password;
-    private Integer mobile;
-    private Integer roleId;  // Should happen automatically - Thus remove later
+    private String mobile;
 }

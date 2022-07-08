@@ -1,18 +1,12 @@
 package com.sibasish.ecom.customerservice.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -21,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Customer {
 
     @Id
@@ -35,11 +30,15 @@ public class Customer {
     private String lastName;
     private String email;
     private String password;
-    private Integer mobile;
+    private String mobile;
 
     @CreationTimestamp
     private Timestamp created_at;
 
     @UpdateTimestamp
     private Timestamp modified_at;
+
+    @OneToOne
+    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_customer_role_role_id"))
+    private Role role;
 }
