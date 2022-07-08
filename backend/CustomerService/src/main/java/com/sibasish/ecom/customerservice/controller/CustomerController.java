@@ -15,12 +15,6 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hi";
-    }
-
     @PostMapping("/create")
     public ResponseEntity<CustomerResponse> createUser(@RequestBody CustomerRequest customerRequest) {
 
