@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 
 import javax.annotation.PostConstruct;
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
+@SpringBootApplication
 public class CustomerServiceApplication {
 
 	@Autowired
