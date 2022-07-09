@@ -4,6 +4,7 @@ package com.sibasish.ecom.customerservice.entity;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -26,6 +27,7 @@ public class Customer {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(name = "id", updatable = false, nullable = false)
+    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID customerId;
     private String firstName;
     private String lastName;
@@ -45,7 +47,7 @@ public class Customer {
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_customer_role_role_id"))
     private Role role;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "customer_id",
             foreignKey = @ForeignKey(name = "fk_customer_address_customer_customer_id")
