@@ -9,6 +9,9 @@ import com.sibasish.ecom.customerservice.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.sibasish.ecom.customerservice.utils.RoleConstants.CUSTOMER;
 
 @Service
@@ -40,5 +43,27 @@ public class CustomerServiceImpl implements CustomerService {
                 .email(customer.getEmail())
                 .mobile(customer.getMobile())
                 .build();
+    }
+
+    @Override
+    public List<CustomerResponse> getAllCustomers() {
+
+        List<Customer> customerList = customerRepository.findAll();
+
+        List<CustomerResponse> customerResponseList = new ArrayList<>();
+        customerList.forEach(customer ->
+                customerResponseList.add
+                        (
+                                CustomerResponse.builder()
+                                .customerId(customer.getCustomerId())
+                                .firstName(customer.getFirstName())
+                                .lastName(customer.getLastName())
+                                .email(customer.getEmail())
+                                .mobile(customer.getMobile())
+                                .build()
+                )
+        );
+
+        return customerResponseList;
     }
 }
