@@ -1,6 +1,5 @@
 package com.sibasish.ecom.customerservice.controller;
 
-import com.sibasish.ecom.customerservice.request.CustomerAddressRequest;
 import com.sibasish.ecom.customerservice.request.CustomerRequest;
 import com.sibasish.ecom.customerservice.response.CustomerResponse;
 import com.sibasish.ecom.customerservice.service.CustomerService;
@@ -17,7 +16,7 @@ import java.util.List;
 @RequestMapping("/customer")
 public class CustomerController {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private CustomerService customerService;
@@ -27,7 +26,7 @@ public class CustomerController {
 
         CustomerResponse customerResponse = customerService.createUser(customerRequest);
 
-        logger.info("Customer with email " + customerResponse.getEmail() + "was created");
+        log.info("Customer with email " + customerResponse.getEmail() + "was created");
         return new ResponseEntity<>(customerResponse, HttpStatus.OK);
     }
 
@@ -36,26 +35,8 @@ public class CustomerController {
 
         List<CustomerResponse> customerResponseList = customerService.getAllCustomers();
 
-        logger.info("Number of customers fetched: " + customerResponseList.size());
+        log.info("Number of customers fetched: " + customerResponseList.size());
         return new ResponseEntity<>(customerResponseList, HttpStatus.OK);
-    }
-
-
-    @PatchMapping("/address/add")
-    public ResponseEntity<String> addAddress(@RequestBody CustomerAddressRequest customerAddressRequest) {
-
-        String response = customerService.addAddress(customerAddressRequest);
-
-        if (response != null && response.startsWith("ERROR")) {
-
-            logger.error(response);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        String success_message = "Address has been added successfully.";
-
-        logger.info(success_message);
-        return new ResponseEntity<>(success_message, HttpStatus.OK);
     }
 
 }
