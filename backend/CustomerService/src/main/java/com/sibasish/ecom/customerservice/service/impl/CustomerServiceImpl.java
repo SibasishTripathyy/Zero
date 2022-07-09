@@ -80,7 +80,12 @@ public class CustomerServiceImpl implements CustomerService {
         System.out.println(customer.getCustomerId() + " -> " + customer.getEmail());
 
         CustomerAddress customerAddress = CustomerAddress.builder()
-                .mobile(customerAddressRequest.getMobile())
+                .mobile
+                        (
+                                customerAddressRequest.getMobile() != null ?
+                                customerAddressRequest.getMobile() :
+                                customer.getMobile()
+                        )
                 .houseNo(customerAddressRequest.getHouseNo())
                 .addressLine1(customerAddressRequest.getAddressLine1())
                 .addressLine2(customerAddressRequest.getAddressLine2())
