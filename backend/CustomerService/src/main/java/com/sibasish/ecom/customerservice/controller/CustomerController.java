@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,7 +29,7 @@ public class CustomerController {
         CustomerResponse customerResponse = customerService.createUser(customerRequest);
 
         logger.info("Customer with email " + customerResponse.getEmail() + "was created");
-        return new ResponseEntity<>(customerResponse, HttpStatus.OK);
+        return new ResponseEntity<>(customerResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
@@ -40,9 +41,8 @@ public class CustomerController {
         return new ResponseEntity<>(customerResponseList, HttpStatus.OK);
     }
 
-
     @PatchMapping("/address/add")
-    public ResponseEntity<String> addAddress(@RequestBody CustomerAddressRequest customerAddressRequest) {
+    public ResponseEntity<String> addAddress(@RequestBody @Valid CustomerAddressRequest customerAddressRequest) {
 
         String response = customerService.addAddress(customerAddressRequest);
 
@@ -56,6 +56,41 @@ public class CustomerController {
 
         logger.info(success_message);
         return new ResponseEntity<>(success_message, HttpStatus.OK);
+    }
+
+    @PatchMapping("/address/update/{id}")
+    public ResponseEntity<String> updateAddress(@RequestBody CustomerAddressRequest customerAddressRequest,
+                                                @PathVariable Integer id)
+    {
+
+        String response = customerService.updateAddress(customerAddressRequest, id);
+
+        if (response != null && response.startsWith("ERROR")) {
+
+            logger.error(response);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        String success_message = "Address has been updated successfully.";
+
+        logger.info(success_message);
+        return new ResponseEntity<>(success_message, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/address/delete/{id}")
+    public ResponseEntity<?> deleteAddress(@PathVariable Integer id) {
+
+        String response = customerService.deleteAddress(id);
+
+        if (response != null && response.startsWith("ERROR")) {
+
+            logger.error(response);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+
+        logger.info("Address with id '" + id + "' was deleted successfully");
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

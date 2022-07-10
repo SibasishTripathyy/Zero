@@ -12,4 +12,8 @@ public interface CustomerService {
     List<CustomerResponse> getAllCustomers();
 
     String addAddress(CustomerAddressRequest customerAddressRequest);
+
+    String updateAddress(CustomerAddressRequest customerAddressRequest, Integer id);
+
+    String deleteAddress(Integer id);
 }
