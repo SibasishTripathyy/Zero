@@ -24,11 +24,11 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping("/create")
-    public ResponseEntity<CustomerResponse> createUser(@RequestBody CustomerRequest customerRequest) {
+    public ResponseEntity<CustomerResponse> createUser(@RequestBody @Valid CustomerRequest customerRequest) {
 
         CustomerResponse customerResponse = customerService.createUser(customerRequest);
 
-        logger.info("Customer with email " + customerResponse.getEmail() + "was created");
+        logger.info("Customer with email " + customerResponse.getEmail() + " was created");
         return new ResponseEntity<>(customerResponse, HttpStatus.CREATED);
     }
 
