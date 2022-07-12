@@ -79,18 +79,10 @@ public class CustomerController {
 
 
     @DeleteMapping("/address/delete/{id}")
-    public ResponseEntity<?> deleteAddress(@PathVariable Integer id) {
+    public void deleteAddress(@PathVariable Integer id) {
 
-        String response = customerService.deleteAddress(id);
-
-        if (response != null && response.startsWith("ERROR")) {
-
-            logger.error(response);
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-
+        customerService.deleteAddress(id);
         logger.info("Address with id '" + id + "' was deleted successfully");
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
