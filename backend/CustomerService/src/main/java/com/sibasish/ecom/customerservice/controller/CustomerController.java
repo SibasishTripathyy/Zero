@@ -46,51 +46,26 @@ public class CustomerController {
 
         String response = customerService.addAddress(customerAddressRequest);
 
-        if (response != null && response.startsWith("ERROR")) {
-
-            logger.error(response);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        String success_message = "Address has been added successfully.";
-
-        logger.info(success_message);
-        return new ResponseEntity<>(success_message, HttpStatus.OK);
+        logger.info(response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PatchMapping("/address/update/{id}")
     public ResponseEntity<String> updateAddress(@RequestBody CustomerAddressRequest customerAddressRequest,
                                                 @PathVariable Integer id)
     {
-
         String response = customerService.updateAddress(customerAddressRequest, id);
 
-        if (response != null && response.startsWith("ERROR")) {
-
-            logger.error(response);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        String success_message = "Address has been updated successfully.";
-
-        logger.info(success_message);
-        return new ResponseEntity<>(success_message, HttpStatus.OK);
+        logger.info(response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
     @DeleteMapping("/address/delete/{id}")
-    public ResponseEntity<?> deleteAddress(@PathVariable Integer id) {
+    public void deleteAddress(@PathVariable Integer id) {
 
-        String response = customerService.deleteAddress(id);
-
-        if (response != null && response.startsWith("ERROR")) {
-
-            logger.error(response);
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-
+        customerService.deleteAddress(id);
         logger.info("Address with id '" + id + "' was deleted successfully");
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
