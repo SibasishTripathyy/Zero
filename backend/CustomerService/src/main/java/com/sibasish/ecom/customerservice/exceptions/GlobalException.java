@@ -14,6 +14,17 @@ public class GlobalException {
     public ResponseEntity<ErrorResponse> handleNoDataFoundException(NoDataFoundException exp) {
 
         ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatusCode(HttpStatus.NO_CONTENT.value());
+        errorResponse.setMessage(exp.getMessage());
+        errorResponse.setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException exp) {
+
+        ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
         errorResponse.setMessage(exp.getMessage());
         errorResponse.setTimestamp(LocalDateTime.now());
