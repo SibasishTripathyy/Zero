@@ -2,6 +2,7 @@ package com.sibasish.ecom.customerservice.service.impl;
 
 import com.sibasish.ecom.customerservice.entity.Customer;
 import com.sibasish.ecom.customerservice.entity.CustomerAddress;
+import com.sibasish.ecom.customerservice.exceptions.NoDataFoundException;
 import com.sibasish.ecom.customerservice.repository.CustomerAddressRepository;
 import com.sibasish.ecom.customerservice.repository.CustomerRepository;
 import com.sibasish.ecom.customerservice.repository.RoleRepository;
@@ -65,21 +66,29 @@ public class CustomerServiceImpl implements CustomerService {
 
         List<Customer> customerList = customerRepository.findAll();
 
-        List<CustomerResponse> customerResponseList = new ArrayList<>();
-        customerList.forEach(customer ->
-                customerResponseList.add
-                        (
-                                CustomerResponse.builder()
-                                .customerId(customer.getCustomerId())
-                                .firstName(customer.getFirstName())
-                                .lastName(customer.getLastName())
-                                .email(customer.getEmail())
-                                .mobile(customer.getMobile())
-                                .build()
-                )
-        );
+        if (customerList.isEmpty()) {
 
-        return customerResponseList;
+            throw new NoDataFoundException("No customers are currently registered with this application");
+
+        } else {
+
+            List<CustomerResponse> customerResponseList = new ArrayList<>();
+            customerList.forEach(customer ->
+                    customerResponseList.add
+                            (
+                                    CustomerResponse.builder()
+                                            .customerId(customer.getCustomerId())
+                                            .firstName(customer.getFirstName())
+                                            .lastName(customer.getLastName())
+                                            .email(customer.getEmail())
+                                            .mobile(customer.getMobile())
+                                            .build()
+                            )
+            );
+
+            return customerResponseList;
+
+        }
     }
 
     @Override
