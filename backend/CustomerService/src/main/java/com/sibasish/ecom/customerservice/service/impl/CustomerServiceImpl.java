@@ -98,9 +98,8 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findByEmail(customerAddressRequest.getEmail());
 
         if (customer == null)
-            return "ERROR: Could not find customer with email id: " + customerAddressRequest.getEmail();
-
-        System.out.println(customer.getCustomerId() + " -> " + customer.getEmail());
+            throw new ResourceNotFoundException("No customer found with email: "
+                    + customerAddressRequest.getEmail());
 
         CustomerAddress customerAddress = CustomerAddress.builder()
                 .mobile
@@ -121,7 +120,8 @@ public class CustomerServiceImpl implements CustomerService {
         customer.getCustomerAddressList().add(customerAddress);
 
         customerRepository.save(customer);
-        return null;
+
+        return "Address has been added successfully.";
     }
 
     @Override
@@ -178,7 +178,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         entityManager.createQuery(criteriaUpdate).executeUpdate();
 
-        return null;
+        return "Address has been updated successfully.";
     }
 
     @Override
