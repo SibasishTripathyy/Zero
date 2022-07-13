@@ -2,6 +2,8 @@ package com.sibasish.ecom.customerservice.service.impl;
 
 import com.sibasish.ecom.customerservice.entity.Customer;
 import com.sibasish.ecom.customerservice.entity.CustomerAddress;
+import com.sibasish.ecom.customerservice.exceptions.NoDataFoundException;
+import com.sibasish.ecom.customerservice.exceptions.ResourceNotFoundException;
 import com.sibasish.ecom.customerservice.repository.CustomerAddressRepository;
 import com.sibasish.ecom.customerservice.repository.CustomerRepository;
 import com.sibasish.ecom.customerservice.repository.RoleRepository;
@@ -65,21 +67,29 @@ public class CustomerServiceImpl implements CustomerService {
 
         List<Customer> customerList = customerRepository.findAll();
 
-        List<CustomerResponse> customerResponseList = new ArrayList<>();
-        customerList.forEach(customer ->
-                customerResponseList.add
-                        (
-                                CustomerResponse.builder()
-                                .customerId(customer.getCustomerId())
-                                .firstName(customer.getFirstName())
-                                .lastName(customer.getLastName())
-                                .email(customer.getEmail())
-                                .mobile(customer.getMobile())
-                                .build()
-                )
-        );
+        if (customerList.isEmpty()) {
 
-        return customerResponseList;
+            throw new NoDataFoundException("No customers are currently registered with this application");
+
+        } else {
+
+            List<CustomerResponse> customerResponseList = new ArrayList<>();
+            customerList.forEach(customer ->
+                    customerResponseList.add
+                            (
+                                    CustomerResponse.builder()
+                                            .customerId(customer.getCustomerId())
+                                            .firstName(customer.getFirstName())
+                                            .lastName(customer.getLastName())
+                                            .email(customer.getEmail())
+                                            .mobile(customer.getMobile())
+                                            .build()
+                            )
+            );
+
+            return customerResponseList;
+
+        }
     }
 
     @Override
@@ -88,9 +98,8 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findByEmail(customerAddressRequest.getEmail());
 
         if (customer == null)
-            return "ERROR: Could not find customer with email id: " + customerAddressRequest.getEmail();
-
-        System.out.println(customer.getCustomerId() + " -> " + customer.getEmail());
+            throw new ResourceNotFoundException("No customer found with email: "
+                    + customerAddressRequest.getEmail());
 
         CustomerAddress customerAddress = CustomerAddress.builder()
                 .mobile
@@ -111,7 +120,8 @@ public class CustomerServiceImpl implements CustomerService {
         customer.getCustomerAddressList().add(customerAddress);
 
         customerRepository.save(customer);
-        return null;
+
+        return "Address has been added successfully.";
     }
 
     @Override
@@ -120,65 +130,64 @@ public class CustomerServiceImpl implements CustomerService {
 
         Optional<CustomerAddress> customerAddress = customerAddressRepository.findById(id);
 
-        if (customerAddress.isPresent()) {
-
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaUpdate<CustomerAddress> criteriaUpdate =
-                    criteriaBuilder.createCriteriaUpdate(CustomerAddress.class);
-            Root<CustomerAddress> root = criteriaUpdate.from(CustomerAddress.class);
-
-
-            String mobile = customerAddressRequest.getMobile();
-            Integer houseNo = customerAddressRequest.getHouseNo();
-            String address_line_1 = customerAddressRequest.getAddressLine1();
-            String address_line_2 = customerAddressRequest.getAddressLine2();
-            String landmark = customerAddressRequest.getLandmark();
-            Integer pinCode = customerAddressRequest.getPinCode();
-            String city = customerAddressRequest.getCity();
-            String country = customerAddressRequest.getCountry();
-
-
-            if (mobile != null && !mobile.equals(""))
-                criteriaUpdate.set(root.get("mobile"), mobile);
-
-            if (houseNo != null)
-                criteriaUpdate.set(root.get("houseNo"), houseNo);
-
-            if (address_line_1 != null && !address_line_1.equals(""))
-                criteriaUpdate.set(root.get("address_line_1"), address_line_1);
-
-            if (address_line_2 != null && !address_line_2.equals(""))
-                criteriaUpdate.set(root.get("address_line_2"), address_line_2);
-
-            if (landmark != null && !landmark.equals(""))
-                criteriaUpdate.set(root.get("landmark"), landmark);
-
-            if (pinCode != null)
-                criteriaUpdate.set(root.get("pinCode"), pinCode);
-
-            if (city != null && !city.equals(""))
-                criteriaUpdate.set(root.get("city"), city);
-
-            if (country != null && !country.equals(""))
-                criteriaUpdate.set(root.get("country"), country);
-
-            criteriaUpdate.where(criteriaBuilder.equal(root.get("customerAddressId"), id));
-
-            entityManager.createQuery(criteriaUpdate).executeUpdate();
+        if (customerAddress.isEmpty()) {
+            throw new ResourceNotFoundException("No address found with id: " + id);
         }
 
-        return null;
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaUpdate<CustomerAddress> criteriaUpdate =
+                criteriaBuilder.createCriteriaUpdate(CustomerAddress.class);
+        Root<CustomerAddress> root = criteriaUpdate.from(CustomerAddress.class);
+
+
+        String mobile = customerAddressRequest.getMobile();
+        Integer houseNo = customerAddressRequest.getHouseNo();
+        String address_line_1 = customerAddressRequest.getAddressLine1();
+        String address_line_2 = customerAddressRequest.getAddressLine2();
+        String landmark = customerAddressRequest.getLandmark();
+        Integer pinCode = customerAddressRequest.getPinCode();
+        String city = customerAddressRequest.getCity();
+        String country = customerAddressRequest.getCountry();
+
+
+        if (mobile != null && !mobile.equals(""))
+            criteriaUpdate.set(root.get("mobile"), mobile);
+
+        if (houseNo != null)
+            criteriaUpdate.set(root.get("houseNo"), houseNo);
+
+        if (address_line_1 != null && !address_line_1.equals(""))
+            criteriaUpdate.set(root.get("address_line_1"), address_line_1);
+
+        if (address_line_2 != null && !address_line_2.equals(""))
+            criteriaUpdate.set(root.get("address_line_2"), address_line_2);
+
+        if (landmark != null && !landmark.equals(""))
+            criteriaUpdate.set(root.get("landmark"), landmark);
+
+        if (pinCode != null)
+            criteriaUpdate.set(root.get("pinCode"), pinCode);
+
+        if (city != null && !city.equals(""))
+            criteriaUpdate.set(root.get("city"), city);
+
+        if (country != null && !country.equals(""))
+            criteriaUpdate.set(root.get("country"), country);
+
+        criteriaUpdate.where(criteriaBuilder.equal(root.get("customerAddressId"), id));
+
+        entityManager.createQuery(criteriaUpdate).executeUpdate();
+
+        return "Address has been updated successfully.";
     }
 
     @Override
-    public String deleteAddress(Integer id) {
+    public void deleteAddress(Integer id) {
 
         try {
             customerAddressRepository.deleteById(id);
         } catch (Exception e) {
-            return "ERROR: Can't find address with id: " + id;
+            throw new ResourceNotFoundException("No address found with id: " + id);
         }
-
-        return null;
     }
 }
