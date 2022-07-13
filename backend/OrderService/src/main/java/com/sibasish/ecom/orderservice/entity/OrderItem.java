@@ -19,6 +19,7 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_item_id")
     private Integer orderItemId;
     private String itemName;
     private Double itemPrice;
@@ -34,4 +35,13 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order orderId;
+
+    @OneToOne
+    @JoinTable(
+            name = "ordered_product",
+            joinColumns = @JoinColumn(name = "order_item_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Product product;
+
 }
