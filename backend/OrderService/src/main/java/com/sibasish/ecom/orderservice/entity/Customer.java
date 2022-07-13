@@ -1,4 +1,4 @@
-package com.sibasish.ecom.customerservice.entity;
+package com.sibasish.ecom.orderservice.entity;
 
 
 import lombok.*;
