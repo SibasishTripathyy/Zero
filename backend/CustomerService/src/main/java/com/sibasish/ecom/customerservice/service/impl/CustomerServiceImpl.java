@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -173,6 +174,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (country != null && !country.equals(""))
             criteriaUpdate.set(root.get("country"), country);
+
+        criteriaUpdate.set(root.get("modified_at"), LocalDateTime.now());
 
         criteriaUpdate.where(criteriaBuilder.equal(root.get("customerAddressId"), id));
 
