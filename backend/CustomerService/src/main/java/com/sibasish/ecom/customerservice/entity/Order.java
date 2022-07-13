@@ -1,5 +1,6 @@
 package com.sibasish.ecom.customerservice.entity;
 
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -12,6 +13,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "`Order`")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Order {
 
     @Id
@@ -24,6 +30,7 @@ public class Order {
     @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID orderId;
     private LocalDate orderDate;
+    private Double totalPrice;
     private String shippingAddress;
     private String paymentMethod;
 
