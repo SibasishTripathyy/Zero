@@ -22,7 +22,7 @@ public class OrderItem {
     private String itemName;
     private Double itemPrice;
     private Integer quantity;
-    private LocalDateTime orderTimestamp;
+    private LocalDateTime orderTimestamp; // ToDo: Check if it needs to be there
 
     @CreationTimestamp
     private LocalDateTime created_at;
