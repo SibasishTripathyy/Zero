@@ -13,7 +13,6 @@ public class OrderItemRequest {
     private String itemName;
     private Double itemPrice;
     private Integer quantity;
-    private LocalDateTime orderTimestamp;
 
     private UUID productId;
 }
