@@ -64,8 +64,6 @@ public class OrderServiceImpl implements OrderService {
 
             CustomerAddress customerAddress = customerAddressOptional.get();
 
-            String shippingAddress = "";
-
             return shippingAddressBuilderHelper(customerAddress,
                             customerAddress.getAddressLine2() != null
                     );
@@ -79,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse createOrder(OrderRequest orderRequest, UUID customerId) {
 
         double totalPrice = 0.0;
-        OrderItem orderItem = new OrderItem();
+
         List<OrderItem> orderItemList = new ArrayList<>();
         List<OrderItemRequest> orderItemRequestList = orderRequest.getOrderItemRequestList();
 
