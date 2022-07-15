@@ -3,6 +3,7 @@ package com.sibasish.ecom.orderservice.service.impl;
 import com.sibasish.ecom.orderservice.entity.CustomerAddress;
 import com.sibasish.ecom.orderservice.entity.Order;
 import com.sibasish.ecom.orderservice.entity.OrderItem;
+import com.sibasish.ecom.orderservice.exceptions.NoDataFoundException;
 import com.sibasish.ecom.orderservice.exceptions.ResourceNotFoundException;
 import com.sibasish.ecom.orderservice.repository.CustomerAddressRepository;
 import com.sibasish.ecom.orderservice.repository.CustomerRepository;
@@ -70,7 +71,7 @@ public class OrderServiceImpl implements OrderService {
                     );
         }
 
-        return "Dummy Address";
+        throw new NoDataFoundException("No address data found for address id: " + addressId);
     }
 
     @Override
@@ -97,8 +98,6 @@ public class OrderServiceImpl implements OrderService {
 
         }
 
-        System.out.println("ADDRESS ID: " + orderRequest.getAddressId());
-        System.out.println(shippingAddressBuilder(orderRequest.getAddressId()));
         try {
             Order order = Order.builder()
                     .orderDate(LocalDate.now())
@@ -120,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
             List<OrderItem> savedOrderItemList = order.getOrderItemList();
 
             for (OrderItem savedOrderItem: savedOrderItemList) {
-                System.out.println("savedOrderItem: " + savedOrderItem.getItemName());
+
                 orderItemResponseList.add(
                         OrderItemResponse.builder()
                                 .itemName(savedOrderItem.getItemName())
@@ -130,7 +129,6 @@ public class OrderServiceImpl implements OrderService {
                 );
             }
 
-            System.out.println("orderItemResponseList" + orderItemResponseList);
             return OrderResponse.builder()
                     .orderId(order.getOrderId())
                     .totalPrice(order.getTotalPrice())
