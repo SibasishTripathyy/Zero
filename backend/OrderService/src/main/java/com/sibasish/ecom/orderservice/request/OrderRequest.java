@@ -10,8 +10,8 @@ import java.util.List;
 @Getter
 public class OrderRequest {
 
-    private String shippingAddress;
     private String paymentMethod;
+    private Integer addressId;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
