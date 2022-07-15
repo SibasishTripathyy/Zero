@@ -1,5 +1,4 @@
-package com.sibasish.ecom.customerservice.entity;
-
+package com.sibasish.ecom.orderservice.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,17 +7,18 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity(name = "`Order`")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Customer {
+public class Order {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -28,14 +28,11 @@ public class Customer {
     )
     @Column(name = "id", updatable = false, nullable = false)
     @Type(type = "org.hibernate.type.UUIDCharType")
-    private UUID customerId;
-    private String firstName;
-    private String lastName;
-
-    @Column(unique = true)
-    private String email;
-    private String password;
-    private String mobile;
+    private UUID orderId;
+    private LocalDate orderDate;
+    private Double totalPrice;
+    private String shippingAddress;
+    private String paymentMethod;
 
     @CreationTimestamp
     private LocalDateTime created_at;
@@ -43,17 +40,11 @@ public class Customer {
     @UpdateTimestamp
     private LocalDateTime modified_at;
 
-    @OneToOne
-    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_customer_role_role_id"))
-    private Role role;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customerId;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(
-            name = "customer_id",
-            foreignKey = @ForeignKey(name = "fk_customer_address_customer_customer_id")
-    )
-    private List<CustomerAddress> customerAddressList;
-
-    @OneToMany(mappedBy = "customerId")
-    private List<Order> orderList;
+    @JoinColumn(name = "order_id")
+    private List<OrderItem> orderItemList;
 }
