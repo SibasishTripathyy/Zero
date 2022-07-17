@@ -9,13 +9,10 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer categoryId;
+
+    @Column(unique = true)
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "product_has_category",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
+    @ManyToMany(mappedBy = "categoryList")
     private List<Product> productList;
 }

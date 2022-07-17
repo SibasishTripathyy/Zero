@@ -44,6 +44,11 @@ public class Product {
     private LocalDateTime modifiedAt;
     private LocalDateTime deletedAt;
 
-    @ManyToMany(mappedBy = "productList")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "product_has_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
     private List<Category> categoryList;
 }

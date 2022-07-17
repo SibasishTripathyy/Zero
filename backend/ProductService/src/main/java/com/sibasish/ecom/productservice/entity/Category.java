@@ -1,9 +1,16 @@
-package com.sibasish.ecom.customerservice.entity;
+package com.sibasish.ecom.productservice.entity;
+
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Category {
 
     @Id
