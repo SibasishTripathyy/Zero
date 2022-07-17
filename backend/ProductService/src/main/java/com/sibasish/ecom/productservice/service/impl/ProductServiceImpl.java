@@ -2,6 +2,7 @@ package com.sibasish.ecom.productservice.service.impl;
 
 import com.sibasish.ecom.productservice.entity.Category;
 import com.sibasish.ecom.productservice.entity.Product;
+import com.sibasish.ecom.productservice.exceptions.NoDataFoundException;
 import com.sibasish.ecom.productservice.exceptions.ResourceNotFoundException;
 import com.sibasish.ecom.productservice.repository.CategoryRepository;
 import com.sibasish.ecom.productservice.repository.ProductRepository;
@@ -10,6 +11,8 @@ import com.sibasish.ecom.productservice.response.CategoryResponse;
 import com.sibasish.ecom.productservice.response.ProductResponse;
 import com.sibasish.ecom.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -127,5 +130,45 @@ public class ProductServiceImpl implements ProductService {
         }
 
         throw new ResourceNotFoundException("Product not found for id: " + productId);
+    }
+
+    @Override
+    public List<ProductResponse> getAllProductsPaginated(Integer page, Integer pageSize) {
+
+        Page<Product> productPage = productRepository.findAll(PageRequest.of(page, pageSize));
+
+        if (productPage.isEmpty()) {
+            throw new NoDataFoundException("No products found.");
+        }
+
+        List<ProductResponse> productResponseList = new ArrayList<>();
+
+        productPage.get().forEach(product -> {
+
+            List<CategoryResponse> categoryResponseList = new ArrayList<>();
+
+            List<Category> categoryList = product.getCategoryList();
+            categoryList.forEach(category ->
+                    categoryResponseList.add(CategoryResponse.builder()
+                            .categoryName(category.getName())
+                            .build()
+                    )
+            );
+
+            productResponseList.add(ProductResponse.builder()
+                    .productId(product.getProductId())
+                    .productName(product.getName())
+                    .description(product.getDescription())
+                    .price(product.getPrice())
+                    .unitsLeft(product.getUnitsLeft())
+                    .outOfStock(product.getOutOfStock())
+                    .isActive(product.getIsActive())
+                    .createdAt(product.getCreatedAt())
+                    .categoryResponseList(categoryResponseList)
+                    .build()
+            );
+        });
+
+        return productResponseList;
     }
 }

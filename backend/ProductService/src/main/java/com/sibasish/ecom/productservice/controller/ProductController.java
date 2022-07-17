@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,5 +30,14 @@ public class ProductController {
 
         ProductResponse productResponse = productService.getProductById(productId);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/all/{page}/{pageSize}")
+    public ResponseEntity<List<ProductResponse>> getAllProductsPaginated(@PathVariable("page") Integer page,
+                                                        @PathVariable("pageSize") Integer pageSize) {
+
+        List<ProductResponse> productResponseList = productService.getAllProductsPaginated(page, pageSize);
+
+        return new ResponseEntity<>(productResponseList, HttpStatus.OK);
     }
 }
