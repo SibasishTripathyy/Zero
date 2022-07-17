@@ -2,6 +2,7 @@ package com.sibasish.ecom.productservice.service.impl;
 
 import com.sibasish.ecom.productservice.entity.Category;
 import com.sibasish.ecom.productservice.entity.Product;
+import com.sibasish.ecom.productservice.exceptions.ResourceNotFoundException;
 import com.sibasish.ecom.productservice.repository.CategoryRepository;
 import com.sibasish.ecom.productservice.repository.ProductRepository;
 import com.sibasish.ecom.productservice.request.ProductRequest;
@@ -11,9 +12,7 @@ import com.sibasish.ecom.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -93,5 +92,40 @@ public class ProductServiceImpl implements ProductService {
                 .createdAt(product.getCreatedAt())
                 .categoryResponseList(categoryResponseList)
                 .build();
+    }
+
+    @Override
+    public ProductResponse getProductById(UUID productId) {
+
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        if (optionalProduct.isPresent()) {
+
+            Product product = optionalProduct.get();
+
+            List<Category> categoryList = product.getCategoryList();
+            List<CategoryResponse> categoryResponseList = new ArrayList<>();
+
+            categoryList.forEach(category ->
+                    categoryResponseList.add(CategoryResponse.builder()
+                        .categoryName(category.getName())
+                        .build()
+                )
+            );
+
+            return ProductResponse.builder()
+                    .productId(product.getProductId())
+                    .productName(product.getName())
+                    .description(product.getDescription())
+                    .price(product.getPrice())
+                    .unitsLeft(product.getUnitsLeft())
+                    .outOfStock(product.getOutOfStock())
+                    .isActive(product.getIsActive())
+                    .createdAt(product.getCreatedAt())
+                    .categoryResponseList(categoryResponseList)
+                    .build();
+        }
+
+        throw new ResourceNotFoundException("Product not found for id: " + productId);
     }
 }
