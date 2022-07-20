@@ -20,4 +20,6 @@ public class OrderResponse {
     private LocalDate orderDate;
 
     private List<OrderItemResponse> orderItemResponseList;
+
+    private PaymentResponse paymentResponse;
 }
