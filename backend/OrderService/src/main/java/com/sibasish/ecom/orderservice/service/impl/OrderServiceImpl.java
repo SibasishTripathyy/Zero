@@ -10,12 +10,15 @@ import com.sibasish.ecom.orderservice.repository.CustomerRepository;
 import com.sibasish.ecom.orderservice.repository.OrderRepository;
 import com.sibasish.ecom.orderservice.request.OrderItemRequest;
 import com.sibasish.ecom.orderservice.request.OrderRequest;
+import com.sibasish.ecom.orderservice.request.PaymentRequest;
 import com.sibasish.ecom.orderservice.response.OrderItemResponse;
 import com.sibasish.ecom.orderservice.response.OrderResponse;
+import com.sibasish.ecom.orderservice.response.PaymentResponse;
 import com.sibasish.ecom.orderservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,6 +30,8 @@ import java.util.UUID;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    @Autowired
+    private RestTemplate restTemplate;
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -113,6 +118,28 @@ public class OrderServiceImpl implements OrderService {
 
             order = orderRepository.save(order);
 
+            // Rest Call To Payment Service
+            PaymentRequest paymentRequest = new PaymentRequest();
+            paymentRequest.setOrderId(order.getOrderId());
+            paymentRequest.setAmount(order.getTotalPrice());
+            paymentRequest.setPaymentType(order.getPaymentMethod());
+
+            PaymentResponse paymentResponse =
+                    restTemplate.postForObject("http://localhost:8083/payment/make",
+                            paymentRequest,
+                            PaymentResponse.class
+                    );
+
+            // ToDo: Look into this
+            assert paymentResponse != null;
+
+            if (paymentResponse.getPaymentStatus().equals("SUCCESS")) {
+                paymentResponse.setMessage("Payment received");
+            } else {
+                paymentResponse.setMessage("Payment Failed");
+            }
+
+            // Order Response
             List<OrderItemResponse> orderItemResponseList = new ArrayList<>();
             List<OrderItem> savedOrderItemList = order.getOrderItemList();
 
@@ -134,6 +161,7 @@ public class OrderServiceImpl implements OrderService {
                     .paymentMethod(order.getPaymentMethod())
                     .orderDate(order.getOrderDate())
                     .orderItemResponseList(orderItemResponseList)
+                    .paymentResponse(paymentResponse)
                     .build();
 
         } catch (Exception e) {

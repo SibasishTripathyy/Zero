@@ -16,4 +16,6 @@ public class OrderRequest {
     private LocalDateTime modifiedAt;
 
     private List<OrderItemRequest> orderItemRequestList;
+
+    private PaymentRequest paymentRequest;
 }
