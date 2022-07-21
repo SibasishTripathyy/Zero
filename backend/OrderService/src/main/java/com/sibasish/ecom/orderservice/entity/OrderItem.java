@@ -22,7 +22,6 @@ public class OrderItem {
     private String itemName;
     private Double itemPrice;
     private Integer quantity;
-    private LocalDateTime orderTimestamp; // ToDo: Check if it needs to be there
 
     @CreationTimestamp
     private LocalDateTime created_at;
@@ -33,13 +32,4 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order orderId;
-
-    @OneToOne
-    @JoinTable(
-            name = "ordered_product",
-            joinColumns = @JoinColumn(name = "order_item_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private Product product;
-
 }

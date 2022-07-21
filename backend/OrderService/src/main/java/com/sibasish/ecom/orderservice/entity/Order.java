@@ -40,9 +40,8 @@ public class Order {
     @UpdateTimestamp
     private LocalDateTime modified_at;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customerId;
+    @Type(type = "org.hibernate.type.UUIDCharType")
+    private UUID customerId;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
