@@ -9,6 +9,7 @@ import com.sibasish.ecom.customerservice.repository.CustomerRepository;
 import com.sibasish.ecom.customerservice.repository.RoleRepository;
 import com.sibasish.ecom.customerservice.request.CustomerAddressRequest;
 import com.sibasish.ecom.customerservice.request.CustomerRequest;
+import com.sibasish.ecom.customerservice.response.CustomerAddressResponse;
 import com.sibasish.ecom.customerservice.response.CustomerResponse;
 import com.sibasish.ecom.customerservice.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.sibasish.ecom.customerservice.utils.RoleConstants.CUSTOMER;
 
@@ -64,6 +66,25 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public CustomerResponse getCustomerById(UUID customerId) {
+
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+
+        if (customerOptional.isEmpty()) {
+            throw new ResourceNotFoundException("No customer found with ID: " + customerId);
+        }
+
+        Customer customer = customerOptional.get();
+        return CustomerResponse.builder()
+                .customerId(customer.getCustomerId())
+                .firstName(customer.getFirstName())
+                .lastName(customer.getLastName())
+                .email(customer.getEmail())
+                .mobile(customer.getMobile())
+                .build();
+    }
+
+    @Override
     public List<CustomerResponse> getAllCustomers() {
 
         List<Customer> customerList = customerRepository.findAll();
@@ -91,6 +112,28 @@ public class CustomerServiceImpl implements CustomerService {
             return customerResponseList;
 
         }
+    }
+
+    @Override
+    public CustomerAddressResponse getAddressById(Integer addressId) {
+
+        Optional<CustomerAddress> customerAddressOptional = customerAddressRepository.findById(addressId);
+
+        if (customerAddressOptional.isEmpty()) {
+            throw new ResourceNotFoundException("No address found with address id: " + addressId);
+        }
+
+        CustomerAddress customerAddress = customerAddressOptional.get();
+        return CustomerAddressResponse.builder()
+                .mobile(customerAddress.getMobile())
+                .houseNo(customerAddress.getHouseNo())
+                .addressLine1(customerAddress.getAddressLine1())
+                .addressLine2(customerAddress.getAddressLine2())
+                .landmark(customerAddress.getLandmark())
+                .pinCode(customerAddress.getPinCode())
+                .city(customerAddress.getCity())
+                .country(customerAddress.getCountry())
+                .build();
     }
 
     @Override

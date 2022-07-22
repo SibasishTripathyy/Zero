@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.InsufficientResourcesException;
 import java.util.UUID;
 
 @RestController
@@ -23,8 +24,7 @@ public class OrderController {
 
     @PostMapping("/create/{customerId}")
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest,
-                                                     @PathVariable("customerId") UUID customerId)
-    {
+                                                     @PathVariable("customerId") UUID customerId) {
         OrderResponse orderResponse = orderService.createOrder(orderRequest, customerId);
 
         logger.info("Order created successfully.");

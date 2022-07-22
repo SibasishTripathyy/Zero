@@ -53,7 +53,4 @@ public class Customer {
             foreignKey = @ForeignKey(name = "fk_customer_address_customer_customer_id")
     )
     private List<CustomerAddress> customerAddressList;
-
-    @OneToMany(mappedBy = "customerId")
-    private List<Order> orderList;
 }
