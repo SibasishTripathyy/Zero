@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -16,10 +15,10 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Modifying(clearAutomatically = true)
     @Query(
             value = "update productdb.product set units_left = units_left - :quantity " +
-                    "where product_id = cast(:productId as char)",
+                    "where product_id = :productId",
             nativeQuery = true
     )
     Integer updateProductQuantity(
-            @Param("productId") UUID productId,
+            @Param("productId") String productId,
             @Param("quantity") Integer quantity);
 }

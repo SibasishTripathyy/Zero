@@ -98,10 +98,8 @@ public class OrderServiceImpl implements OrderService {
                             .build()
             );
 
-            // ToDo: Quantity is not reducing from product table.
-            System.out.println(productId);
-            System.out.println(quantity);
-            System.out.println(orderRepository.updateProductQuantity(productId, quantity));
+            Integer rowsAffected = orderRepository.updateProductQuantity(productId.toString(), quantity);
+            System.out.println("Rows Affected: " + rowsAffected);
         }
 
         /* Rest call to customer service for customer details
