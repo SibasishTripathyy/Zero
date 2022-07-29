@@ -1,6 +1,7 @@
 package com.sibasish.ecom.cartservice.controller;
 
 import com.sibasish.ecom.cartservice.response.CartResponse;
+import com.sibasish.ecom.cartservice.response.OrderResponse;
 import com.sibasish.ecom.cartservice.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,5 +33,14 @@ public class CartController {
         CartResponse cartResponse = cartService.getCartItems();
 
         return new ResponseEntity<>(cartResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/purchase/{customerId}/{addressId}")
+    public ResponseEntity<OrderResponse> purchase(@PathVariable("customerId") UUID customerId,
+                                                  @PathVariable("addressId") Integer addressId,
+                                                  @RequestParam String paymentMethod) {
+
+        OrderResponse orderResponse = cartService.purchase(customerId, addressId, paymentMethod);
+        return new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 }
