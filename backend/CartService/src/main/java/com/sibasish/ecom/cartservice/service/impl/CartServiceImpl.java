@@ -67,6 +67,10 @@ public class CartServiceImpl implements CartService {
         List<ProductAndQuantityForCustomerResponse> productAndQuantityList =
                 cartRepository.findProductAndQuantityForCustomer(customerId.toString());
 
+        if (productAndQuantityList.isEmpty()) {
+            throw new NoDataFoundException("No items in cart.");
+        }
+
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setPaymentMethod(paymentMethod);
         orderRequest.setAddressId(addressId);
