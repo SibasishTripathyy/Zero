@@ -1,6 +1,7 @@
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@material-ui/icons'
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
+import { sliderItems } from '../data'
 
 const Container = styled.div`
     width: 100%;
@@ -32,6 +33,8 @@ const Arrow = styled.div`
 const Wrapper = styled.div`
   height: 100%;
   display: flex;
+  transition: all 1.5s ease;
+  transform: translateX(${props=>props.slideIndex * -100}vw);
 `
 
 const Slide = styled.div`
@@ -74,46 +77,36 @@ const Button = styled.button`
 
 const Slider = () => {
   
+  const [slideIndex, setSlideIndex] = useState(0);
+  const handleClick = (direction) => {
+
+    if (direction === "left") {
+      setSlideIndex(slideIndex <= 0 ? 2 : slideIndex - 1);
+    } else {
+      setSlideIndex(slideIndex >= 2 ? 0 : slideIndex + 1);
+    }
+  }
+
   return (
     <Container>
-        <Arrow direction="left">
+        <Arrow direction="left" onClick={() => handleClick("left")}>
           <ArrowLeftOutlined/>
         </Arrow>
-        <Wrapper>
-          <Slide bg="F7F8FF">
-            <ImgContainer>
-              <Image src="../../mobileFrontPage.png" />
-            </ImgContainer>
-            <InfoContainer>
-              <Title>NEW LAUNCHES</Title>
-              <Description>GET AMAZING DISCOUNTS ON PRE-ORDER!</Description>
-              <Button>SHOP NOW</Button>
-            </InfoContainer>
-          </Slide>
-
-          <Slide bg="light-green">
-            <ImgContainer>
-              <Image src="../../mobileFrontPage.png" />
-            </ImgContainer>
-            <InfoContainer>
-              <Title>SUMMER SALE</Title>
-              <Description>GET AMAZING DISCOUNTS ON PRE-ORDER!</Description>
-              <Button>SHOP NOW</Button>
-            </InfoContainer>
-          </Slide>
-
-          <Slide bg="light-yellow">
-            <ImgContainer>
-              <Image src="../../noBack.png" />
-            </ImgContainer>
-            <InfoContainer>
-              <Title>WINTER SALE</Title>
-              <Description>GET AMAZING DISCOUNTS ON PRE-ORDER!</Description>
-              <Button>SHOP NOW</Button>
-            </InfoContainer>
-          </Slide>
+        <Wrapper slideIndex={slideIndex}>
+          {sliderItems.map(item=>(
+            <Slide bg={item.bg}>
+              <ImgContainer>
+                <Image src={item.img} />
+              </ImgContainer>
+              <InfoContainer>
+                <Title>{item.title}</Title>
+                <Description>{item.desc}</Description>
+                <Button>SHOP NOW</Button>
+              </InfoContainer>
+            </Slide>
+          ))}
         </Wrapper>
-        <Arrow direction="right">
+        <Arrow direction="right" onClick={() => handleClick("right")}>
           <ArrowRightOutlined/>
         </Arrow>
     </Container>
