@@ -21,3 +21,21 @@ export const sliderItems = [
         bg: "ECECEC"
     }
 ];
+
+export const categories = [
+    {
+        id: 1,
+        img: "../highEndPhone.jpg",
+        title: "PREMIUM MOBILES!"
+    },
+    {
+        id: 2,
+        img: "../midRangePhone.jpg",
+        title: "MID-RANGE MOBILES!"
+    },
+    {
+        id: 3,
+        img: "../budgetPhone.jpg",
+        title: "BUDGET MOBILES!"
+    }
+]
